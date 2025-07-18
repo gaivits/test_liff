@@ -1,12 +1,58 @@
-<html> 
+<html>
     <head>
-        <title>
-        </title>
-    <head>
-        <body>
-            <p>ชอบแมกซ์</p>
-        <body>
-</html>
+        <title>LIFF Access Token Example</title>
+        <script charset="utf-8" src="https://static.line-scdn.net/liff/sdk/v2/sdk.js"></script>
+    </head>
+    <body>
+        <p>ชอบแมกซ์</p>
+        <button id="getAccessTokenButton">Get LINE Access Token</button>
+        <p id="accessTokenDisplay"></p>
 
-<script>
-    </script>
+        <script>
+            // Replace 'YOUR_LIFF_ID' with your actual LIFF ID
+            const LIFF_ID = 'YOUR_LIFF_ID';
+
+            async function initializeLIFF() {
+                try {
+                    await liff.init({
+                        liffId: "2007778332-G0O0xQN6"
+                    });
+                    console.log('LIFF initialized successfully!');
+
+                    // Check if the user is logged into LINE
+                    if (!liff.isLoggedIn()) {
+                        console.log('User not logged in, redirecting to LINE login...');
+                        liff.login(); // Redirects to LINE login page
+                    } else {
+                        console.log('User is logged in.');
+                        // Now you can try to get the access token
+                        document.getElementById('getAccessTokenButton').style.display = 'block';
+                    }
+                } catch (err) {
+                    console.error('LIFF initialization failed', err);
+                }
+            }
+
+            function getAndDisplayAccessToken() {
+                if (liff.isLoggedIn()) {
+                    const accessToken = liff.getAccessToken();
+                    if (accessToken) {
+                        document.getElementById('accessTokenDisplay').textContent = 'Access Token: ' + accessToken;
+                        console.log('LIFF Access Token:', accessToken);
+                    } else {
+                        document.getElementById('accessTokenDisplay').textContent = 'Could not retrieve access token.';
+                        console.log('Access token not found.');
+                    }
+                } else {
+                    document.getElementById('accessTokenDisplay').textContent = 'Please log in to LINE first.';
+                    console.log('User is not logged in.');
+                }
+            }
+
+            document.addEventListener('DOMContentLoaded', () => {
+                initializeLIFF();
+                document.getElementById('getAccessTokenButton').addEventListener('click', getAndDisplayAccessToken);
+            });
+        </script>
+    </body>
+</html>
