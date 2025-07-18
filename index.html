@@ -1,75 +1,75 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>LIFF Access Token Example</title>
-        <script charset="utf-8" src="https://static.line-scdn.net/liff/sdk/v2/sdk.js"></script>
-        <style>
-            /* Initially hide the button until LIFF is ready and user is logged in */
-            #getAccessTokenButton {
-                display: none;
-            }
-        </style>
-    </head>
-    <body>
-        <p>ชอบแมกซ์</p>
-        <button id="getAccessTokenButton">Get LINE Access Token</button>
-        <p id="accessTokenDisplay"></p>
+<head>
+    <title>LIFF Access Token Example</title>
+    <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/versions/2.22.3/sdk.js"></script>
+    <style>
+        /* Initially hide the button until LIFF is ready and user is logged in */
+        #getAccessTokenButton {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <p>ชอบแมกซ์</p>
+    <button id="getAccessTokenButton">Get LINE Access Token</button>
+    <p id="accessTokenDisplay"></p>
 
-        <script>
-            // Replace 'YOUR_LIFF_ID' with your actual LIFF ID
-            const LIFF_ID = '2007778332-G0O0xQN6';
+    <script>
+        // Replace 'YOUR_LIFF_ID' with your actual LIFF ID
+        const LIFF_ID = '2007778332-G0O0xQN6';
 
-            async function initializeLIFF() {
-                try {
-                    // Ensure liff is available before calling init
-                    if (typeof liff === 'undefined') {
-                        console.error('LIFF SDK not loaded.');
-                        document.getElementById('accessTokenDisplay').textContent = 'Error: LIFF SDK not loaded.';
-                        return;
-                    }
-
-                    await liff.init({
-                        liffId: LIFF_ID // Use the constant LIFF_ID
-                    });
-                    console.log('LIFF initialized successfully!');
-
-                    // Check if the user is logged into LINE
-                    if (!liff.isLoggedIn()) {
-                        console.log('User not logged in, redirecting to LINE login...');
-                        liff.login(); // Redirects to LINE login page
-                    } else {
-                        console.log('User is logged in.');
-                        // Show the button only if LIFF is initialized and user is logged in
-                        document.getElementById('getAccessTokenButton').style.display = 'block';
-                    }
-                } catch (err) {
-                    console.error('LIFF initialization failed', err);
-                    document.getElementById('accessTokenDisplay').textContent = 'LIFF initialization failed: ' + err.message;
+        async function initializeLIFF() {
+            try {
+                // Ensure liff is available before calling init
+                if (typeof liff === 'undefined') {
+                    console.error('LIFF SDK not loaded.');
+                    document.getElementById('accessTokenDisplay').textContent = 'Error: LIFF SDK not loaded.';
+                    return;
                 }
-            }
 
-            function getAndDisplayAccessToken() {
-                if (liff.isLoggedIn()) {
-                    const accessToken = liff.getAccessToken();
-                    if (accessToken) {
-                        document.getElementById('accessTokenDisplay').textContent = 'Access Token: ' + accessToken;
-                        console.log('LIFF Access Token:', accessToken);
-                    } else {
-                        document.getElementById('accessTokenDisplay').textContent = 'Could not retrieve access token. Make sure your LIFF app has the "Issue an access token" scope enabled.';
-                        console.log('Access token not found.');
-                    }
+                await liff.init({
+                    liffId: LIFF_ID // Use the constant LIFF_ID
+                });
+                console.log('LIFF initialized successfully!');
+
+                // Check if the user is logged into LINE
+                if (!liff.isLoggedIn()) {
+                    console.log('User not logged in, redirecting to LINE login...');
+                    liff.login(); // Redirects to LINE login page
                 } else {
-                    document.getElementById('accessTokenDisplay').textContent = 'Please log in to LINE first to get the access token.';
-                    console.log('User is not logged in.');
+                    console.log('User is logged in.');
+                    // Show the button only if LIFF is initialized and user is logged in
+                    document.getElementById('getAccessTokenButton').style.display = 'block';
                 }
+            } catch (err) {
+                console.error('LIFF initialization failed', err);
+                document.getElementById('accessTokenDisplay').textContent = 'LIFF initialization failed: ' + err.message;
             }
+        }
 
-            // Call initializeLIFF when the DOM is fully loaded
-            document.addEventListener('DOMContentLoaded', () => {
-                initializeLIFF();
-                // Attach event listener to the button
-                document.getElementById('getAccessTokenButton').addEventListener('click', getAndDisplayAccessToken);
-            });
-        </script>
-    </body>
+        function getAndDisplayAccessToken() {
+            if (liff.isLoggedIn()) {
+                const accessToken = liff.getAccessToken();
+                if (accessToken) {
+                    document.getElementById('accessTokenDisplay').textContent = 'Access Token: ' + accessToken;
+                    console.log('LIFF Access Token:', accessToken);
+                } else {
+                    document.getElementById('accessTokenDisplay').textContent = 'Could not retrieve access token. Make sure your LIFF app has the "Issue an access token" scope enabled.';
+                    console.log('Access token not found.');
+                }
+            } else {
+                document.getElementById('accessTokenDisplay').textContent = 'Please log in to LINE first to get the access token.';
+                console.log('User is not logged in.');
+            }
+        }
+
+        // Call initializeLIFF when the DOM is fully loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeLIFF();
+            // Attach event listener to the button
+            document.getElementById('getAccessTokenButton').addEventListener('click', getAndDisplayAccessToken);
+        });
+    </script>
+</body>
 </html>
